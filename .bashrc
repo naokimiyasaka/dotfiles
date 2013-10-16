@@ -1,0 +1,86 @@
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+# contribが無ければ作成
+! [ -a $HOME/contrib ] && mkdir $HOME/contrib
+
+#----------------------------------------------------------------------------
+# Bash
+#----------------------------------------------------------------------------
+
+#
+# preexec.bash
+#
+source $HOME/contrib/preexec.bash
+
+
+#----------------------------------------------------------------------------
+# Git
+#----------------------------------------------------------------------------
+
+#
+# git-completion.bash
+#
+source $HOME/contrib/git-completion.bash
+
+
+#
+# プロンプトにVCSの情報を表示する。
+# 今のところSubversionとGitに対応。
+#
+# 表記例)
+#   Subversion : (SVN:trunk:1)
+#                (SVN:branches/hoge:4)
+#
+#   Git        : (Git:master)
+#
+function parse_vcs_info {
+  git_branch=`git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(Git:\1)/'`
+  if ! [ $git_branch ]; then
+    __svn_status=(`LANG=C svn info 2> /dev/null | awk '/^URL:/{url = $2} /^Last Changed Rev:/{rev = $4; print url " " rev} '`)
+    url=`echo ${__svn_status[0]}`
+    revision=`echo ${__svn_status[1]}`
+    if [ $url ]; then
+      echo -n '(SVN:'
+      case "$url" in
+        *trunk*)
+          echo -n "trunk:$revision)"
+        ;;
+        *branches*)
+          echo -n 'branches'
+          branch=`echo -n $url | sed -e 's/.*branches\///' | sed -e 's/\/.*//'`
+          [ $branch ] && echo -n "/$branch:$revision)"
+        ;;
+        *tags*)
+          echo -n 'tags'
+          tag=`echo -n $url | sed -e 's/.*tags\///' | sed -e 's/\/.*//'`
+          [ $tag ] && echo -n "/$tag:$revision)"
+        ;;
+      esac
+    fi
+  else
+    [ $git_branch ] && echo -n "$git_branch"
+  fi
+}
+
+# コマンドを実行する度に必ず呼ばれる関数
+function precmd() {
+  PROMPT="\[\033[1;32m\][\u@${HOSTNAME} \t \W\$(parse_vcs_info)]\[\033[0m\]\$ "
+}
+function proml {
+  PS1="\[\033[1;32m\][\u@${HOSTNAME} \t \W\$(parse_vcs_info)]\[\033[0m\]\$ "
+}
+proml
+
+
+function loopwatch {
+  while true
+  do
+    date;
+    ls -l;
+    sleep 5;
+    clear;
+  done
+}
+
