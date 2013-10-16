@@ -15,6 +15,15 @@ fi
 source $HOME/contrib/preexec.bash
 
 
+#
+# alias
+#
+alias ll="ls -l --color=tty"
+alias la="ls -al --color=tty"
+alias lm="ll | less"
+
+
+
 #----------------------------------------------------------------------------
 # Git
 #----------------------------------------------------------------------------
@@ -74,13 +83,19 @@ function proml {
 proml
 
 
+#
+# loopwatch
+# 引数で指定したコマンドを5秒置きに実行する
+#
 function loopwatch {
+  # 無限ループして処理
   while true
   do
     date;
-    ls -l;
+    echo
+    $*
     sleep 5;
-    clear;
+    clear
   done
 }
 
