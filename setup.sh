@@ -49,4 +49,3 @@ echo "Download : $HOME/contrib/preexec.bash"
 # GitHubからEmacs設定をclone
 git clone https://github.com/Alfr0475/Emacs.git $HOME/.emacs.d 2>/dev/null
 echo "Git clone : https://github.com/Alfr0475/Emacs.git > $HOME/.emacs.d"
-

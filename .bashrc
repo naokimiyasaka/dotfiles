@@ -22,7 +22,10 @@ alias ll="ls -l --color=tty"
 alias la="ls -al --color=tty"
 alias lm="ll | less"
 
-
+#
+# Term
+#
+export TERM="xterm-256color"
 
 #----------------------------------------------------------------------------
 # Git
