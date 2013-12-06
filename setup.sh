@@ -60,7 +60,23 @@ if ! [ -e $HOME/.emacs.d ]; then
     echo "Git clone : https://github.com/Alfr0475/Emacs.git > $HOME/.emacs.d"
 fi
 
-#
+
+#----------------------------------------------------------------------------
+# Ruby設定
+#----------------------------------------------------------------------------
+# RSense
+if ! [ -e $HOME/contrib/rsense ]; then
+    wget -O $HOME/contrib/rsense-0.3.tar.bz2 http://cx4a.org/pub/rsense/rsense-0.3.tar.bz2
+    echo "Download : $HOME/contrib/rsense-0.3.tar.bz2"
+    cd $HOME/contrib/rsense
+    tar jxvfp rasense-0.3.tar.bz2 1>/dev/null
+    echo "Deployment : rasense-0.3"
+    mv $HOME/contrib/rsense-0.3 $HOME/contrib/rsense
+    rm -rf $HOME/contrib/rsense-0.3.tar.bz2
+    cd $HOME
+fi
+
+# Rubyリファレンスのダウンロード
 if ! [ -e $HOME/data/rurema ]; then
     mkdir -p $HOME/data/rurema
     echo "Create data directory : $HOME/data"
