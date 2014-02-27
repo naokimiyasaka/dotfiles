@@ -18,8 +18,14 @@ source $HOME/contrib/preexec.bash
 #
 # alias
 #
-alias ll="ls -l --color=tty"
-alias la="ls -al --color=tty"
+if [ `uname` = "Darwin" ]; then
+  alias ll="ls -l --color=tty"
+  alias la="ls -al --color=tty"
+elif [ `uname` = "Linux" ]; then
+  alias ll="ls -lG"
+  alias la="ls -alG"
+fi
+
 alias lm="ll | less"
 
 #
