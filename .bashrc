@@ -18,10 +18,10 @@ source $HOME/contrib/preexec.bash
 #
 # alias
 #
-if [ `uname` = "Darwin" ]; then
+if [ `uname` = "Linux" ]; then
   alias ll="ls -l --color=tty"
   alias la="ls -al --color=tty"
-elif [ `uname` = "Linux" ]; then
+elif [ `uname` = "Darwin" ]; then
   alias ll="ls -lG"
   alias la="ls -alG"
 fi
