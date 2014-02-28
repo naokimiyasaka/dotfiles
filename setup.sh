@@ -4,7 +4,7 @@
 #----------------------------------------------------------------------------
 # dotファイル設定
 #----------------------------------------------------------------------------
-dotfiles=( .bashrc .gitconfig)
+dotfiles=( .bashrc .bash_profile .gitconfig)
 
 for file in ${dotfiles[@]}
 do
@@ -68,7 +68,6 @@ fi
 if ! [ -e $HOME/contrib/rsense ]; then
     wget -O $HOME/contrib/rsense-0.3.tar.bz2 http://cx4a.org/pub/rsense/rsense-0.3.tar.bz2
     echo "Download : $HOME/contrib/rsense-0.3.tar.bz2"
-    cd $HOME/contrib/rsense
     tar jxvfp rasense-0.3.tar.bz2 1>/dev/null
     echo "Deployment : rasense-0.3"
     mv $HOME/contrib/rsense-0.3 $HOME/contrib/rsense
@@ -85,7 +84,6 @@ fi
 if ! [ -e $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829 ]; then
     wget -O $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz http://doc.ruby-lang.org/archives/201208/ruby-refm-1.9.3-dynamic-20120829.tar.gz 2>/dev/null
     echo "Download : $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz"
-    cd $HOME/data/rurema
     tar zxvfp $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz 1>/dev/null
     echo "Deployment : ruby-refm-1.9.3-dynamic-20120829"
     rm -rf $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz 2>/dev/null
