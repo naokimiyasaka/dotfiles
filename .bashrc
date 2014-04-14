@@ -24,6 +24,17 @@ if [ `uname` = "Linux" ]; then
 elif [ `uname` = "Darwin" ]; then
   alias ll="ls -lG"
   alias la="ls -alG"
+
+  # phpenvの設定
+  if [ -e ~/.phpenv ]; then
+    export PATH=$PATH:$HOME/.phpenv/bin
+    eval "$(phpenv init -)"
+  fi
+
+  # rbenvの設定
+  if which rbenv > /dev/null; then
+    eval "$(rbenv init -)";
+  fi
 fi
 
 alias lm="ll | less"
