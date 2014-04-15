@@ -62,7 +62,7 @@ function echo_warning() {
 #----------------------------------------------------------------------------
 # dotファイル設定
 #----------------------------------------------------------------------------
-dotfiles=( .bashrc .bash_profile .gitconfig)
+dotfiles=( .bashrc .bash_profile .gitconfig .vimrc )
 
 for file in ${dotfiles[@]}
 do
