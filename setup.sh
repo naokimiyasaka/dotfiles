@@ -1,16 +1,17 @@
-#!/bin/sh
-
+#!/bin/bash
 
 #----------------------------------------------------------------------------
 # Configure
 #----------------------------------------------------------------------------
 RES_COL=60
+COMMENT_COL=70
 MOVE_TO_COL="echo -en \\033[${RES_COL}G"
 SETCOLOR_SUCCESS="echo -en \\033[1;32m"
 SETCOLOR_FAILURE="echo -en \\033[1;31m"
 SETCOLOR_WARNING="echo -en \\033[1;33m"
 SETCOLOR_NORMAL="echo -en \\033[0;39m"
-DOTFILES=( .bashrc .bash_profile .gitconfig .vimrc )
+MOVE_TO_COMMENT_COL="echo -en \\033[${COMMENT_COL}G"
+DOTFILES=( '.bashrc' '.bash_profile' '.gitconfig' '.vimrc' )
 
 #----------------------------------------------------------------------------
 # Common関数群
@@ -55,6 +56,13 @@ function echo_warning() {
     echo -n $"WARNING"
     $SETCOLOR_NORMAL
     echo -n "]"
+    echo -ne "\r"
+    return 0
+}
+
+function echo_comment() {
+    $MOVE_TO_COMMENT_COL
+    echo -n $1
     echo -ne "\r"
     return 0
 }
@@ -137,16 +145,24 @@ function clear_files() {
 # dotファイル設定
 #----------------------------------------------------------------------------
 function setup_dotfiles() {
-    dotfiles=( .bashrc .bash_profile .gitconfig .vimrc )
-
-    for file in ${dotfiles[@]}
+    for file in ${DOTFILES[@]}
     do
         echo -n $file
         if [ -e $HOME/$file ]; then
             if ! [ -L $HOME/$file ]; then
+                if ! [ -e $HOME/$file.dot ]; then
+                    echo_passed
+                    ln -s $HOME/dotfiles/$file $HOME/$file.dot
+                    echo_comment "Exists file. So much so that create .dot file.: $file.dot"
+                    echo
+                else
+                    echo_passed
+                    echo_comment "Exists file."
+                    echo
+                fi
+            else
                 echo_passed
-                ln -s $HOME/dotfiles/$file $HOME/$file.dot
-                echo "Exists file. So much so that create .dot file.: $file.dot"
+                echo_comment "Exists file."
                 echo
             fi
         else
@@ -166,6 +182,7 @@ function setup_git_completion() {
 
     if ! [ `type -P wget` ]; then
         echo_passed
+        echo_comment "Not install wget."
         echo
         return
     fi
@@ -186,6 +203,7 @@ function setup_git_completion() {
         fi
     else
         echo_passed
+        echo_comment "Exists file."
         echo
     fi
 }
@@ -199,6 +217,7 @@ function setup_preexec() {
 
     if ! [ `type -P wget` ]; then
         echo_passed
+        echo_comment "Not install wget."
         echo
         return
     fi
@@ -219,6 +238,8 @@ function setup_preexec() {
         fi
     else
         echo_passed
+        echo_comment "Exists file."
+        echo
     fi
 }
 
@@ -231,6 +252,7 @@ function setup_emacs() {
 
     if ! [ `type -P git` ]; then
         echo_passed
+        echo_comment "Not install git."
         echo
         return
     fi
@@ -245,7 +267,9 @@ function setup_emacs() {
             rm -rf $HOME/.emacs.d
         else
             echo_passed
+            echo_comment "$HOME/.emacs.d was clone already."
             echo
+            return
         fi
     fi
 
@@ -261,6 +285,7 @@ function setup_emacs() {
         fi
     else
         echo_passed
+        echo_comment "Exists file."
         echo
     fi
 }
@@ -274,6 +299,7 @@ function setup_vim() {
 
     if ! [ `type -P git` ]; then
         echo_passed
+        echo_comment "Not install git."
         echo
         return
     fi
@@ -283,7 +309,9 @@ function setup_vim() {
             rm -rf $HOME/.vim
         else
             echo_passed
+            echo_comment "$HOME/.vim was clone already."
             echo
+            return
         fi
     fi
 
@@ -300,6 +328,7 @@ function setup_vim() {
         fi
     else
         echo_passed
+        echo_comment "Exists file."
         echo
     fi
 }
@@ -309,8 +338,11 @@ function setup_vim() {
 # Ruby設定
 #----------------------------------------------------------------------------
 function setup_rsense() {
+    echo -n "Setup rsense ..."
+
     if ! [ `type -P wget` ]; then
         echo_passed
+        echo_comment "Not install wget."
         echo
         return
     fi
@@ -323,7 +355,7 @@ function setup_rsense() {
             echo
             return
         fi
-        
+
         (cd $HOME/contrib && tar jxvfp $HOME/contrib/rsense-0.3.tar.bz2 1>/dev/null)
         if [ $? -ne 0 ]; then
             echo_failure
@@ -338,6 +370,7 @@ function setup_rsense() {
         echo
     else
         echo_passed
+        echo_comment "Exists file."
         echo
     fi
 }
@@ -347,8 +380,11 @@ function setup_rsense() {
 # rurema設定
 #----------------------------------------------------------------------------
 function setup_rurema() {
+    echo -n "Setup rurema ..."
+
     if ! [ `type -P wget` ]; then
         echo_passed
+        echo_comment "Not install wget."
         echo
         return
     fi
@@ -376,6 +412,7 @@ function setup_rurema() {
         rm -rf $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz 2>/dev/null
     else
         echo_passed
+        echo_comment "Exists file."
         echo
     fi
 }
@@ -417,4 +454,3 @@ else
     default
     exit 0
 fi
-
