@@ -317,9 +317,10 @@ function setup_vim() {
 
     # GitHubからVim設定をclone
     if ! [ -e $HOME/.vim ]; then
-        echo -n "Cloning into '$HOME/.vim'..."
         git clone https://github.com/Alfr0475/Vim.git $HOME/.vim 1>/dev/null 2>/dev/null
         if [ $? -eq 0 ]; then
+            (cd $HOME/.vim && git submodule init 1>/dev/null 2>/dev/null)
+            (cd $HOME/.vim && git submodule update 1>/dev/null 2>/dev/null)
             echo_success
             echo
         else
@@ -356,7 +357,7 @@ function setup_rsense() {
             return
         fi
 
-        (cd $HOME/contrib && tar jxvfp $HOME/contrib/rsense-0.3.tar.bz2 1>/dev/null)
+        (cd $HOME/contrib && tar jxfp $HOME/contrib/rsense-0.3.tar.bz2) 1>/dev/null
         if [ $? -ne 0 ]; then
             echo_failure
             echo
@@ -402,7 +403,7 @@ function setup_rurema() {
             return
         fi
 
-        (cd $HOME/data/rurema && tar zxvfp $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz 1>/dev/null)
+        (cd $HOME/data/rurema && tar zxfp $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz) 1>/dev/null
         if [ $? -ne 0 ]; then
             echo_failure
             echo
@@ -410,6 +411,9 @@ function setup_rurema() {
         fi
 
         rm -rf $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz 2>/dev/null
+
+        echo_success
+	echo
     else
         echo_passed
         echo_comment "Exists file."
