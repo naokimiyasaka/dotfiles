@@ -24,6 +24,7 @@ if [ `uname` = "Linux" ]; then
 elif [ `uname` = "Darwin" ]; then
   alias ll="ls -lG"
   alias la="ls -alG"
+  alias vi="vim"
 
   # phpenvの設定
   if [ -e ~/.phpenv ]; then
