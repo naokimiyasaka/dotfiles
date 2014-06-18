@@ -2,6 +2,6 @@ if [ -f ~/.bashrc ]; then
         . ~/.bashrc
 fi
 
-PATH=$PATH:$HOME/bin
+PATH=/usr/local/bin:$PATH:$HOME/bin
 
 export PATH

@@ -1,3 +1,5 @@
 [user]
 	email = alfr0475@gmail.com
 	name = Seiki Koga
+[core]
+	editor = /usr/local/bin/vim

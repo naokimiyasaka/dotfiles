@@ -27,20 +27,20 @@ elif [ `uname` = "Darwin" ]; then
   alias vi="vim"
 
   # phpenvの設定
-  if [ -e ~/.phpenv ]; then
-    export PATH=$PATH:$HOME/.phpenv/bin
-    eval "$(phpenv init -)"
-  fi
+  #if [ -e ~/.phpenv ]; then
+  #  export PATH=$PATH:$HOME/.phpenv/bin
+  #  eval "$(phpenv init -)"
+  #fi
 
   # rbenvの設定
-  if which rbenv > /dev/null; then
-    eval "$(rbenv init -)";
-  fi
+  #if which rbenv > /dev/null; then
+  #  eval "$(rbenv init -)";
+  #fi
 
   # pyenvの設定
-  if which pyenv > /dev/null; then
-    eval "$(pyenv init -)";
-  fi
+  #if which pyenv > /dev/null; then
+  #  eval "$(pyenv init -)";
+  #fi
 fi
 
 alias lm="ll | less"

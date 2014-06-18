@@ -152,7 +152,7 @@ function setup_dotfiles() {
             if ! [ -L $HOME/$file ]; then
                 if ! [ -e $HOME/$file.dot ]; then
                     echo_passed
-                    ln -s $HOME/dotfiles/$file $HOME/$file.dot
+                    ln -s $HOME/work/dotfiles/$file $HOME/$file.dot
                     echo_comment "Exists file. So much so that create .dot file.: $file.dot"
                     echo
                 else
@@ -168,7 +168,7 @@ function setup_dotfiles() {
         else
             echo_success
             echo
-            ln -s $HOME/dotfiles/$file $HOME/$file
+            ln -s $HOME/work/dotfiles/$file $HOME/$file
         fi
     done
 }
