@@ -180,7 +180,7 @@ function setup_dotfiles() {
 function setup_git_completion() {
     echo -n "git-completion.bash"
 
-    if ! [ `type -P wget` ]; then
+    if ! [ -x "`which wget`" ]; then
         echo_passed
         echo_comment "Not install wget."
         echo
@@ -215,7 +215,7 @@ function setup_git_completion() {
 function setup_preexec() {
     echo -n "preexec.bash"
 
-    if ! [ `type -P wget` ]; then
+    if ! [ -x "`which wget`" ]; then
         echo_passed
         echo_comment "Not install wget."
         echo
@@ -245,12 +245,59 @@ function setup_preexec() {
 
 
 #----------------------------------------------------------------------------
+# zsh設定
+#----------------------------------------------------------------------------
+function setup_zsh() {
+    echo -n "Cloning into '$HOME/.zsh.d'..."
+
+    if ! [ -x "`which git`" ]; then
+        echo_passed
+        echo_comment "Not install git."
+        echo
+        return
+    fi
+
+    # 既に設定ファイルが存在していたら削除
+    if [ -e $HOME/.zsh.d ]; then
+        rm -f $HOME/.zsh.d
+    fi
+
+    if [ -e $HOME/.zsh.d ]; then
+        if ! [ -e $HOME/.zsh.d/.git ]; then
+            rm -rf $HOME/.zsh.d
+        else
+            echo_passed
+            echo_comment "$HOME/.zsh.d was clone already."
+            echo
+            return
+        fi
+    fi
+
+    # GitHubからzsh設定をclone
+    if ! [ -e $HOME/.zsh.d ]; then
+        git clone https://github.com/Alfr0475/zsh.d.git $HOME/.zsh.d 1>/dev/null 2>/dev/null
+        if [ $? -eq 0 ]; then
+            echo_success
+            echo
+        else
+            echo_failure
+            echo
+        fi
+    else
+        echo_passed
+        echo_comment "Exists file."
+        echo
+    fi
+}
+
+
+#----------------------------------------------------------------------------
 # Emacs設定
 #----------------------------------------------------------------------------
 function setup_emacs() {
     echo -n "Cloning into '$HOME/.emacs.d'..."
 
-    if ! [ `type -P git` ]; then
+    if ! [ -x "`which git`" ]; then
         echo_passed
         echo_comment "Not install git."
         echo
@@ -297,7 +344,7 @@ function setup_emacs() {
 function setup_vim() {
     echo -n "Cloning into '$HOME/.vim'..."
 
-    if ! [ `type -P git` ]; then
+    if ! [ -x "`which git`" ]; then
         echo_passed
         echo_comment "Not install git."
         echo
@@ -341,7 +388,7 @@ function setup_vim() {
 function setup_rsense() {
     echo -n "Setup rsense ..."
 
-    if ! [ `type -P wget` ]; then
+    if ! [ -x "`which wget`" ]; then
         echo_passed
         echo_comment "Not install wget."
         echo
@@ -383,7 +430,7 @@ function setup_rsense() {
 function setup_rurema() {
     echo -n "Setup rurema ..."
 
-    if ! [ `type -P wget` ]; then
+    if ! [ -x "`which wget`" ]; then
         echo_passed
         echo_comment "Not install wget."
         echo
@@ -413,7 +460,7 @@ function setup_rurema() {
         rm -rf $HOME/data/rurema/ruby-refm-1.9.3-dynamic-20120829.tar.gz 2>/dev/null
 
         echo_success
-	echo
+        echo
     else
         echo_passed
         echo_comment "Exists file."
@@ -433,6 +480,7 @@ function default() {
     setup_dotfiles
     setup_git_completion
     setup_preexec
+    setup_zsh
     setup_emacs
     setup_vim
     setup_rsense
