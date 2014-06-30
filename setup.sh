@@ -257,11 +257,6 @@ function setup_zsh() {
         return
     fi
 
-    # 既に設定ファイルが存在していたら削除
-    if [ -e $HOME/.zsh.d ]; then
-        rm -f $HOME/.zsh.d
-    fi
-
     if [ -e $HOME/.zsh.d ]; then
         if ! [ -e $HOME/.zsh.d/.git ]; then
             rm -rf $HOME/.zsh.d
