@@ -287,6 +287,76 @@ function setup_zsh() {
 
 
 #----------------------------------------------------------------------------
+# tmux設定
+#----------------------------------------------------------------------------
+function setup_tmux() {
+    echo -n "Cloning into '$HOME/.tmux.d'..."
+
+    if ! [ -x "`which git`" ]; then
+        echo_passed
+        echo_comment "Not install git."
+        echo
+        return
+    fi
+
+    if [ -e $HOME/.tmux.d ]; then
+        if ! [ -e $HOME/.tmux.d/.git ]; then
+            rm -rf $HOME/.tmux.d
+        else
+            echo_passed
+            echo_comment "$HOME/.tmux.d was clone already."
+            echo
+            initialize_tmux
+            return
+        fi
+    fi
+
+    # GitHubからtmux設定をclone
+    if ! [ -e $HOME/.tmux.d ]; then
+        git clone https://github.com/Alfr0475/tmux.d.git $HOME/.tmux.d 1>/dev/null 2>/dev/null
+        if [ $? -eq 0 ]; then
+            echo_success
+            echo
+            initialize_tmux
+        else
+            echo_failure
+            echo
+        fi
+    else
+        echo_passed
+        echo_comment "Exists file."
+        echo
+    fi
+}
+
+
+function initialize_tmux() {
+    echo -n "Initialize tmux..."
+
+    if ! [ -x "`which git`" ]; then
+        echo_passed
+        echo_comment "Not install git."
+        echo
+        return
+    fi
+
+    if [ -e $HOME/.tmux.d/tmux-powerline/.git ]; then
+        (cd $HOME/.tmux.d/tmux-powerline && git submodule update --init) 1>/dev/null 2>/dev/null
+    fi
+
+    for filepath in `ls -1 $HOME/.tmux.d/tmux-powerline-themes`
+    do
+        if ! [ -L "$HOME/.tmux.d/tmux-powerline/themes/`basename ${filepath}`" ]; then
+            ln -s "$HOME/.tmux.d/tmux-powerline-themes/$filepath" "$HOME/.tmux.d/tmux-powerline/themes/`basename ${filepath}`"
+        fi
+    done
+
+    echo_success
+    echo
+}
+
+
+#----------------------------------------------------------------------------
 # Emacs設定
 #----------------------------------------------------------------------------
 function setup_emacs() {
@@ -476,6 +546,7 @@ function default() {
     setup_git_completion
     setup_preexec
     setup_zsh
+    setup_tmux
     setup_emacs
     setup_vim
     setup_rsense
