@@ -11,7 +11,7 @@ SETCOLOR_FAILURE="echo -en \\033[1;31m"
 SETCOLOR_WARNING="echo -en \\033[1;33m"
 SETCOLOR_NORMAL="echo -en \\033[0;39m"
 MOVE_TO_COMMENT_COL="echo -en \\033[${COMMENT_COL}G"
-DOTFILES=( '.bashrc' '.bash_profile' '.gitconfig' '.vimrc' '.tigrc' '.zshrc' '.zshenv' '.tmux.conf')
+DOTFILES=( '.bashrc' '.bash_profile' '.gitconfig' '.vimrc' '.tigrc' '.zshrc' '.zshenv' '.tmux.conf' '.tmux-powerlinerc')
 
 #----------------------------------------------------------------------------
 # Common関数群
@@ -363,13 +363,6 @@ function initialize_tmux() {
     if [ -e $HOME/.tmux.d/tmux-powerline/.git ]; then
         (cd $HOME/.tmux.d/tmux-powerline && git submodule update --init) 1>/dev/null 2>/dev/null
     fi
-
-    for filepath in `ls -1 $HOME/.tmux.d/tmux-powerline-themes`
-    do
-        if ! [ -L "$HOME/.tmux.d/tmux-powerline/themes/`basename ${filepath}`" ]; then
-            ln -s "$HOME/.tmux.d/tmux-powerline-themes/$filepath" "$HOME/.tmux.d/tmux-powerline/themes/`basename ${filepath}`"
-        fi
-    done
 
     echo_success
     echo
