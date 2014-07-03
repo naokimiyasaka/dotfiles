@@ -129,6 +129,16 @@ function clear_files() {
         echo
     fi
 
+    echo -n "remove: $HOME/.tmuxinator"
+    if [ -e $HOME/.tmuxinator ]; then
+        rm -rf $HOME/.tmuxinator
+        echo_success
+        echo
+    else
+        echo_passed
+        echo
+    fi
+
     echo -n "remove: $HOME/.emacs.d"
     if [ -e $HOME/.emacs.d ]; then
         rm -rf $HOME/.emacs.d
@@ -370,6 +380,69 @@ function initialize_tmux() {
 
 
 #----------------------------------------------------------------------------
+# tmuxinator設定
+#----------------------------------------------------------------------------
+function setup_tmuxinator() {
+    echo -n "Cloning into '$HOME/.tmuxinator'..."
+
+    if ! [ -x "`which git`" ]; then
+        echo_passed
+        echo_comment "Not install git."
+        echo
+        return
+    fi
+
+    if [ -e $HOME/.tmuxinator ]; then
+        if ! [ -e $HOME/.tmuxinator/.git ]; then
+            rm -rf $HOME/.tmuxinator
+        else
+            echo_passed
+            echo_comment "$HOME/.tmuxinator was clone already."
+            echo
+            initialize_tmuxinator
+            return
+        fi
+    fi
+
+    # GitHubからtmuxinator設定をclone
+    if ! [ -e $HOME/.tmuxinator ]; then
+        git clone https://github.com/Alfr0475/tmuxinator.d.git $HOME/.tmuxinator 1>/dev/null 2>/dev/null
+        if [ $? -eq 0 ]; then
+            echo_success
+            echo
+            initialize_tmuxinator
+        else
+            echo_failure
+            echo
+        fi
+    else
+        echo_passed
+        echo_comment "Exists file."
+        echo
+    fi
+}
+
+
+function initialize_tmuxinator() {
+    echo -n "Initialize tmuxinator..."
+
+    if ! [ -x "`which git`" ]; then
+        echo_passed
+        echo_comment "Not install git."
+        echo
+        return
+    fi
+
+    if [ -e $HOME/.tmuxinator/tmuxinator/.git ]; then
+        (cd $HOME/.tmuxinator/tmuxinator && git submodule update --init) 1>/dev/null 2>/dev/null
+    fi
+
+    echo_success
+    echo
+}
+
+
+#----------------------------------------------------------------------------
 # Emacs設定
 #----------------------------------------------------------------------------
 function setup_emacs() {
@@ -560,6 +633,7 @@ function default() {
     setup_preexec
     setup_zsh
     setup_tmux
+    setup_tmuxinator
     setup_emacs
     setup_vim
     setup_rsense
