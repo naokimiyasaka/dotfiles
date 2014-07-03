@@ -109,6 +109,26 @@ function clear_files() {
         echo
     fi
 
+    echo -n "remove: $HOME/.zsh.d"
+    if [ -e $HOME/.zsh.d ]; then
+        rm -rf $HOME/.zsh.d
+        echo_success
+        echo
+    else
+        echo_passed
+        echo
+    fi
+
+    echo -n "remove: $HOME/.tmux.d"
+    if [ -e $HOME/.tmux.d ]; then
+        rm -rf $HOME/.tmux.d
+        echo_success
+        echo
+    else
+        echo_passed
+        echo
+    fi
+
     echo -n "remove: $HOME/.emacs.d"
     if [ -e $HOME/.emacs.d ]; then
         rm -rf $HOME/.emacs.d
