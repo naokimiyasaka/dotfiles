@@ -11,7 +11,7 @@ SETCOLOR_FAILURE="echo -en \\033[1;31m"
 SETCOLOR_WARNING="echo -en \\033[1;33m"
 SETCOLOR_NORMAL="echo -en \\033[0;39m"
 MOVE_TO_COMMENT_COL="echo -en \\033[${COMMENT_COL}G"
-DOTFILES=( '.bashrc' '.bash_profile' '.gitconfig' '.vimrc' '.tigrc' '.zshrc' '.zshenv' )
+DOTFILES=( '.bashrc' '.bash_profile' '.gitconfig' '.vimrc' '.tigrc' '.zshrc' '.zshenv' '.tmux.conf' '.tmux-powerlinerc')
 
 #----------------------------------------------------------------------------
 # Common関数群
@@ -102,6 +102,26 @@ function clear_files() {
     echo -n "remove: $HOME/.vim"
     if [ -e $HOME/.vim ]; then
         rm -rf $HOME/.vim
+        echo_success
+        echo
+    else
+        echo_passed
+        echo
+    fi
+
+    echo -n "remove: $HOME/.zsh.d"
+    if [ -e $HOME/.zsh.d ]; then
+        rm -rf $HOME/.zsh.d
+        echo_success
+        echo
+    else
+        echo_passed
+        echo
+    fi
+
+    echo -n "remove: $HOME/.tmux.d"
+    if [ -e $HOME/.tmux.d ]; then
+        rm -rf $HOME/.tmux.d
         echo_success
         echo
     else
@@ -283,6 +303,69 @@ function setup_zsh() {
         echo_comment "Exists file."
         echo
     fi
+}
+
+
+#----------------------------------------------------------------------------
+# tmux設定
+#----------------------------------------------------------------------------
+function setup_tmux() {
+    echo -n "Cloning into '$HOME/.tmux.d'..."
+
+    if ! [ -x "`which git`" ]; then
+        echo_passed
+        echo_comment "Not install git."
+        echo
+        return
+    fi
+
+    if [ -e $HOME/.tmux.d ]; then
+        if ! [ -e $HOME/.tmux.d/.git ]; then
+            rm -rf $HOME/.tmux.d
+        else
+            echo_passed
+            echo_comment "$HOME/.tmux.d was clone already."
+            echo
+            initialize_tmux
+            return
+        fi
+    fi
+
+    # GitHubからtmux設定をclone
+    if ! [ -e $HOME/.tmux.d ]; then
+        git clone https://github.com/Alfr0475/tmux.d.git $HOME/.tmux.d 1>/dev/null 2>/dev/null
+        if [ $? -eq 0 ]; then
+            echo_success
+            echo
+            initialize_tmux
+        else
+            echo_failure
+            echo
+        fi
+    else
+        echo_passed
+        echo_comment "Exists file."
+        echo
+    fi
+}
+
+
+function initialize_tmux() {
+    echo -n "Initialize tmux..."
+
+    if ! [ -x "`which git`" ]; then
+        echo_passed
+        echo_comment "Not install git."
+        echo
+        return
+    fi
+
+    if [ -e $HOME/.tmux.d/tmux-powerline/.git ]; then
+        (cd $HOME/.tmux.d/tmux-powerline && git submodule update --init) 1>/dev/null 2>/dev/null
+    fi
+
+    echo_success
+    echo
 }
 
 
@@ -476,6 +559,7 @@ function default() {
     setup_git_completion
     setup_preexec
     setup_zsh
+    setup_tmux
     setup_emacs
     setup_vim
     setup_rsense
